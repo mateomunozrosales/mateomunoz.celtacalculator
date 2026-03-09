@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multifuncional Celta - App Oficial</title>
+    <style>
+        :root {
+            --azul-celta: #87CEEB; /* Celeste Celta */
+            --azul-oscuro: #004d99;
+            --rojo-santiago: #C60B1E;
+            --blanco: #FFFFFF;
+            --gris-suave: #f4f4f4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--gris-suave);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: var(--blanco);
+            width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-top: 8px solid var(--rojo-santiago);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--azul-celta);
+            color: var(--azul-oscuro);
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 2px solid var(--azul-oscuro);
+        }
+
+        nav {
+            display: flex;
+            background: var(--azul-oscuro);
+        }
+
+        nav button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: none;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        nav button:hover {
+            background: var(--azul-celta);
+            color: var(--azul-oscuro);
+        }
+
+        nav button.active {
+            background: var(--blanco);
+            color: var(--azul-oscuro);
+        }
+
+        .content {
+            padding: 25px;
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--azul-oscuro);
+            font-size: 1.2rem;
+            margin-top: 0;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--azul-celta);
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        button.calc-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--azul-oscuro);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        button.calc-btn:hover {
+            background-color: var(--rojo-santiago);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e7f3ff;
+            border-radius: 8px;
+            border-left: 5px solid var(--azul-oscuro);
+            font-weight: bold;
+            color: #333;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 0.7rem;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        CELTA VIGO CALCULATOR
+    </header>
+    
+    <nav>
+        <button onclick="showSection('temp')" id="btn-temp" class="active">Temperatura</button>
+        <button onclick="showSection('bmi')" id="btn-bmi">BMI (IMC)</button>
+        <button onclick="showSection('cal')" id="btn-cal">Calorías</button>
+    </nav>
+
+    <div id="temp" class="content active">
+        <h2>🌡️ Conversor Celeste</h2>
+        <div class="input-group">
+            <label>Valor:</label>
+            <input type="number" id="tempValue" placeholder="Escribe el valor...">
+        </div>
+        <div class="input-group">
+            <label>Escala:</label>
+            <select id="tempScale">
+                <option value="C">Celsius (°C)</option>
+                <option value="F">Fahrenheit (°F)</option>
+                <option value="K">Kelvin (K)</option>
+            </select>
+        </div>
+        <button class="calc-btn" onclick="convertTemp()">Convertir</button>
+        <div id="resTemp" class="result" style="display:none;"></div>
+    </div>
+
+    <div id="bmi" class="content">
+        <h2>⚖️ IMC do Celta</h2>
+        <div class="input-group">
+            <label>Peso (kg):</label>
+            <input type="number" id="bmiWeight" placeholder="Ej: 75">
+        </div>
+        <div class="input-group">
+            <label>Altura (cm):</label>
+            <input type="number" id="bmiHeight" placeholder="Ej: 180">
+        </div>
+        <button class="calc-btn" onclick="calculateBMI()">Calcular IMC</button>
+        <div id="resBMI" class="result" style="display:none;"></div>
+    </div>
+
+    <div id="cal" class="content">
+        <h2>🍎 Nutrición Deportiva</h2>
+        <div class="input-group">
+            <label>Alimento:</label>
+            <select id="foodItem">
+                <option value="0.52">Manzana (52 kcal/100g)</option>
+                <option value="1.30">Pechuga de Pollo (130 kcal/100g)</option>
+                <option value="3.50">Pasta (350 kcal/100g)</option>
+                <option value="0.89">Plátano (89 kcal/100g)</option>
+                <option value="2.50">Pan Integral (250 kcal/100g)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label>Cantidad (gramos):</label>
+            <input type="number" id="calGrams" placeholder="Ej: 200">
+        </div>
+        <button class="calc-btn" onclick="estimateCalories()">Calcular Calorías</button>
+        <div id="resCal" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="footer">
+        Afouteza e Corazón - 2024
+    </div>
+</div>
+
+<script>
+    // Navegación
+    function showSection(sectionId) {
+        document.querySelectorAll('.content').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        
+        document.getElementById(sectionId).classList.add('active');
+        document.getElementById('btn-' + sectionId).classList.add('active');
+    }
+
+    // Lógica Temperatura
+    function convertTemp() {
+        let val = parseFloat(document.getElementById('tempValue').value);
+        let scale = document.getElementById('tempScale').value;
+        let resDiv = document.getElementById('resTemp');
+        
+        if (isNaN(val)) return;
+
+        let c, f, k;
+        if (scale === 'C') {
+            c = val; f = (val * 9/5) + 32; k = val + 273.15;
+        } else if (scale === 'F') {
+            f = val; c = (val - 32) * 5/9; k = c + 273.15;
+        } else {
+            k = val; c = val - 273.15; f = (c * 9/5) + 32;
+        }
+
+        resDiv.style.display = 'block';
+        resDiv.innerHTML = `Celsius: ${c.toFixed(2)}°C<br>Fahrenheit: ${f.toFixed(2)}°F<br>Kelvin: ${k.toFixed(2)}K`;
+    }
+
+    // Lógica BMI
+    function calculateBMI() {
+        let weight = parseFloat(document.getElementById('bmiWeight').value);
+        let height = parseFloat(document.getElementById('bmiHeight').value) / 100;
+        let resDiv = document.getElementById('resBMI');
+
+        if (!weight || !height) return;
+
+        let imc = weight / (height * height);
+        let cat = "";
+
+        if (imc < 18.5) cat = "Bajo peso";
+        else if (imc < 25) cat = "Normal (¡Forma de jugador!)";
+        else if (imc < 30) cat = "Sobrepeso";
+        else cat = "Obesidad";
+
+        resDiv.style.display = 'block';
+        resDiv.innerHTML = `IMC: ${imc.toFixed(2)}<br>Categoría: ${cat}`;
+    }
+
+    // Lógica Calorías
+    function estimateCalories() {
+        let kcalPerGram = parseFloat(document.getElementById('foodItem').value);
+        let grams = parseFloat(document.getElementById('calGrams').value);
+        let resDiv = document.getElementById('resCal');
+
+        if (!grams) return;
+
+        let total = kcalPerGram * grams;
+        resDiv.style.display = 'block';
+        resDiv.innerHTML = `Energía total: ${total.toFixed(0)} kcal`;
+    }
+</script>
+
+</body>
+</html>
